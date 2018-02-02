@@ -53,8 +53,20 @@ def detail(request, question_id):
 
 
 def results(request, question_id):
-    response = "You're looking at the results of question %s."
-    return HttpResponse(response % question_id)
+    """
+    question_id에 해당하는 Question객체 한개를 넘김
+    polls/results.html에서
+    question에 속한 Choice들의 목록을 보여주면서
+        각 항목의 votes값을 출력
+    :param request:
+    :param question_id:
+    :return:
+    """
+    question = Question.objects.get(pk=question_id)
+    context = {
+        'question': question,
+    }
+    return render(request, 'polls/results.html', context)
 
 
 def vote(request, question_id):
