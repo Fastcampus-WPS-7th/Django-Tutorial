@@ -24,7 +24,7 @@
 			type="radio"
 			name="choice">
 		<label for="choice{{ forloop.counter }}">
-			{{ choice.choice_text }}
+			{{ choice.choice_text }}({{ choice.pk }})
 		</label>
 		{% endfor %}
 		<button type="submit">Vote</button>

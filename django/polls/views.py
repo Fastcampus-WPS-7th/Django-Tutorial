@@ -1,7 +1,7 @@
-from django.http import HttpResponse, Http404
-from django.shortcuts import render, get_object_or_404
+from django.http import HttpResponse
+from django.shortcuts import render, get_object_or_404, redirect
 
-from .models import Question
+from .models import Question, Choice
 
 
 def index(request):
@@ -58,4 +58,28 @@ def results(request, question_id):
 
 
 def vote(request, question_id):
-    return HttpResponse("You're voting on question %s." % question_id)
+    """
+    1. request.POST의 choice키에 온 value를
+        pk로 갖는 Choice객체의
+        votes값을 1 증가시키고
+        DB에 저장
+    2. 이후 question_id에 해당하는 results뷰로 redirect
+    :param request:
+    :param question_id:
+    :return:
+    """
+    # request.POST의 name(choice)에 온 value를
+    choice_pk = request.POST['choice']
+    # pk로 가지는 Choice객체 choice
+    choice = Choice.objects.get(pk=choice_pk)
+    # choice의 votes값을 1 증가시키고
+    choice.votes += 1
+    # DB에 저장
+    choice.save()
+
+    # 이후 question_id인자값을 전달하며
+    # polls:results로 redirect
+    return redirect(
+        'polls:results',
+        question_id=question_id
+    )
