@@ -1,4 +1,4 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, Http404
 from django.shortcuts import render
 
 from .models import Question
@@ -38,7 +38,13 @@ def detail(request, question_id):
     :param question_id:
     :return:
     """
-    question = Question.objects.get(pk=question_id)
+    try:
+        # question을 get()시도
+        question = Question.objects.get(pk=question_id)
+    except Question.DoesNotExist:
+        # DoesNotExist예외가 발생 시
+        # Http404에러를 발생시키면서 메시지를 전달
+        raise Http404('Question does not exist')
     context = {
         'question': question,
     }
